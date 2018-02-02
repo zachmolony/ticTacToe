@@ -2,6 +2,7 @@
 # Name:        ticTacToe
 #-------------------------------------------------------------------------------
 from time import sleep
+from random import randint
 #init board as list
 board = [" ", " ", " ", " ", " ", " ", " ", " ", " ",]
 print("=" * 40)
@@ -23,6 +24,7 @@ def start():
     try:
         players = int(input("Enter a 1 for a one player game and a 2 for a two player game: "))
         if players == 1:
+            xplayer = input("Player x enter your name: ")
             mode = input("Choose a difficulty: Easy or Hard (e/h)")
             if mode == "e":
                 cpuEasy()
@@ -39,7 +41,7 @@ def start():
         print(e)
 
 def cpuEasy():
-    global x, win, xplayer, oplayer
+    global x, won, xplayer, oplayer
     try:
         #check for users turn
         if x == True:
@@ -55,6 +57,8 @@ def cpuEasy():
             omove = randint(0,9)
             if board[omove] == " ":
                 board[omove] = "o"
+                omove += 1
+                print("CPU chooses space", omove)
             else:
                 cpuEasy()
         #change current user
@@ -63,9 +67,7 @@ def cpuEasy():
     except:
         print("invalid input. ")
         cpuEasy()
-    while win == False:
-        print_my_board()
-        isWin()
+    print_my_board()
 
 def twoPlayer():
     global xplayer, oplayer, x
@@ -92,12 +94,8 @@ def twoPlayer():
     #handles any invalid input
     except:
         print("invalid input")
-        #twoPlayer()
+        twoPlayer()
     print_my_board()
-    while win == False:
-        print_my_board()
-        isWin()
-
 
 def print_my_board():
     #printing each row of the board
@@ -136,11 +134,11 @@ def isWin():
     if won == True:
         print("Game over.")
         start()
-    elif players == "1":
+    elif players == 1:
         if mode == "e":
-            cpuEasy
+            cpuEasy()
         elif mode == "h":
-            cpuHard
+            cpuHard()
     elif players == 2:
         twoPlayer()
 
