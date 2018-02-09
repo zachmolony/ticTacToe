@@ -4,7 +4,6 @@
 from time import sleep
 from random import randint
 #init board as list
-board = [" ", " ", " ", " ", " ", " ", " ", " ", " ",]
 print("=" * 40)
 print("             TIC TAC TOE")
 print("=" * 40)
@@ -19,27 +18,55 @@ print()
 x = True
 won = False
 
+#this function runs the selection of what mode the user chooses
 def start():
-    global players, oplayer, xplayer, mode
+    global players, oplayer, xplayer, mode, board
     try:
-        players = int(input("Enter a 1 for a one player game and a 2 for a two player game: "))
+        board = [" ", " ", " ", " ", " ", " ", " ", " ", " ",]
+        players = int(input("Enter a 1 for a one player game and a 2 for a two player game, or a 3 to exit: "))
         if players == 1:
             xplayer = input("Player x enter your name: ")
-            mode = input("Choose a difficulty: Easy or Hard (e/h)")
-            if mode == "e":
-                cpuEasy()
-            elif mode == "h":
-                #cpuHard()
-                Pass
-            else:
-                print("Invalid mode input")
+            mode = "e"
+            cpuEasy()
         elif players == 2:
             xplayer = input("Player x enter your name: ")
             oplayer = input("Player o enter your name: ")
             twoPlayer()
-    except errorMessage as e:
-        print(e)
+    except:
+        print("Invalid input. ")
+        sleep(2)
+        start()
 
+#takes inputs from users and places them on the board
+def twoPlayer():
+    global xplayer, oplayer, x
+    try:
+        #check for users turn
+        if x == True:
+            #choose placement
+            xmove = int(input('{} {}: '.format(xplayer, "enter a number 1-9"))) - 1
+            #check if the space is free
+            if board[xmove] == " ":
+                board[xmove] = "x"
+            else:
+                print("That place is taken. try again")
+                twoPlayer()
+        else:
+            omove = int(input('{} {}: '.format(oplayer, "enter a number 1-9"))) - 1
+            if board[omove] == " ":
+                board[omove] = "o"
+            else:
+                print("That place is taken. try again")
+                twoPlayer()
+        #change current user
+        x = not x
+    #handles any invalid input
+    except:
+        print("invalid input")
+        twoPlayer()
+    print_my_board()
+
+#this function is identical to the 2player function but instead generates a random integer intead of taking an input
 def cpuEasy():
     global x, won, xplayer, oplayer
     try:
@@ -69,34 +96,7 @@ def cpuEasy():
         cpuEasy()
     print_my_board()
 
-def twoPlayer():
-    global xplayer, oplayer, x
-    try:
-        #check for users turn
-        if x == True:
-            #choose placement
-            xmove = int(input('{} {}: '.format(xplayer, "enter a number 1-9"))) - 1
-            #check if the space is free
-            if board[xmove] == " ":
-                board[xmove] = "x"
-            else:
-                print("That place is taken. try again")
-                twoPlayer()
-        else:
-            omove = int(input('{} {}: '.format(oplayer, "enter a number 1-9"))) - 1
-            if board[omove] == " ":
-                board[omove] = "o"
-            else:
-                print("That place is taken. try again")
-                twoPlayer()
-        #change current user
-        x = not x
-    #handles any invalid input
-    except:
-        print("invalid input")
-        twoPlayer()
-    print_my_board()
-
+#prints the lines of the board
 def print_my_board():
     #printing each row of the board
     print(board[:3])
@@ -104,6 +104,7 @@ def print_my_board():
     print(board[6:])
     isWin()
 
+#fuction checks all possible win scenarios
 def isWin():
     global players, mode, won
     #horizontal win combinations
@@ -131,9 +132,11 @@ def isWin():
     elif " " not in board:
         print("the game is a tie ")
         won = True
+    #check if the game is over
     if won == True:
         print("Game over.")
         start()
+    #continue game if nobody has won
     elif players == 1:
         if mode == "e":
             cpuEasy()
